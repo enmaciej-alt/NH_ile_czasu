@@ -1,14 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
-<title>Planer filmów</title>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NH do kiedy film</title>
 
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width: 500px;
+    margin: auto;
+    padding: 16px;
+}
+
+input{
+    width:100%;
+    box-sizing:border-box;
+    padding:8px;
+    margin-bottom:8px;
+}
+
+button{
+    padding:10px 16px;
+}
+
+.film{
+    margin-bottom:24px;
+}
+
+h3{
+    margin-bottom:8px;
+}
+</style>
+</head>
 <body>
 
-<h1>Moja aplikacja działa!</h1>
+<div class="film">
+    <h3>Pierwszy film</h3>
+    <input id="TB_Start1" value="9:00">
+    <input id="TB_Dur1" type="number" value="120">
 
-<p>Tu będzie planer filmów.</p>
+    <div id="LBL_End1">Godzina zakończenia</div>
+    <div id="Break1">Przerwa</div>
+</div>
+
+<div class="film">
+    <h3>Drugi film</h3>
+    <input id="TB_Start2" value="12:15">
+    <input id="TB_Dur2" type="number" value="95">
+
+    <div id="LBL_End2">Godzina zakończenia</div>
+    <div id="Break2">Przerwa</div>
+</div>
+
+<div class="film">
+    <h3>Trzeci film</h3>
+    <input id="TB_Start3" value="14:45">
+    <input id="TB_Dur3" type="number" value="116">
+
+    <div id="LBL_End3">Godzina zakończenia</div>
+</div>
+
+<button onclick="oblicz()">Oblicz!</button>
+
+<script>
+function HourToMinutes(timeText){
+    const parts = timeText.split(":");
+    return Number(parts[0]) * 60 + Number(parts[1]);
+}
+
+function MinutesToHour(minutes){
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+
+    if(m < 10){
+        return h + ":0" + m;
+    }
+
+    return h + ":" + m;
+}
+
+function oblicz(){
+
+    let Start1 = 0;
+    let End1 = 0;
+    let Start2 = 0;
+    let End2 = 0;
+    let Start3 = 0;
+    let End3 = 0;
+
+    if(TB_Start1.value !== "" && TB_Dur1.value !== ""){
+        Start1 = HourToMinutes(TB_Start1.value);
+        End1 = Start1 + Number(TB_Dur1.value);
+        LBL_End1.textContent = MinutesToHour(End1);
+    }
+
+    if(TB_Start2.value !== "" && TB_Dur2.value !== ""){
+        Start2 = HourToMinutes(TB_Start2.value);
+        End2 = Start2 + Number(TB_Dur2.value);
+        LBL_End2.textContent = MinutesToHour(End2);
+    }
+
+    if(TB_Start3.value !== "" && TB_Dur3.value !== ""){
+        Start3 = HourToMinutes(TB_Start3.value);
+        End3 = Start3 + Number(TB_Dur3.value);
+        LBL_End3.textContent = MinutesToHour(End3);
+    }
+
+    if(TB_Start2.value !== ""){
+        if(Start2 > End1){
+            Break1.textContent =
+                "Przerwa: " + (Start2 - End1) + " min";
+        }
+        else if(Start2 === End1){
+            Break1.textContent = "Bez przerwy";
+        }
+        else{
+            Break1.textContent =
+                "Film zaczyna się " +
+                (End1 - Start2) +
+                " min przed końcem poprzedniego filmu";
+        }
+    }
+    else{
+        Break1.textContent = "";
+    }
+
+    if(TB_Start3.value !== "" && TB_Dur3.value !== ""){
+        if(Start3 > End2){
+            Break2.textContent =
+                "Przerwa: " + (Start3 - End2) + " min";
+        }
+        else if(Start3 === End2){
+            Break2.textContent = "Bez przerwy";
+        }
+        else{
+            Break2.textContent =
+                "Film zaczyna się " +
+                (End2 - Start3) +
+                " min przed końcem poprzedniego filmu";
+        }
+    }
+    else{
+        Break2.textContent = "";
+    }
+}
+</script>
 
 </body>
 </html>
